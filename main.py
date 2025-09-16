@@ -1,31 +1,46 @@
 from flask import Flask, request, render_template, jsonify , render_template_string
 import pandas as pd
-from app import generate_code , extract_form , save_code
+from src.form_creator_agent.agent import FormCreatorAgent
+form_creator_agent = FormCreatorAgent()
+creator_graph = form_creator_agent.form_creator_graph()
+
 import os
 app = Flask(__name__)
 
 CSV_FILE = "form_submissions.csv"
+config={"configurable": {"thread_id": "ai-form-thread"}}
 
-
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
-    return render_template("ask_field.html")
+    generated_code = None
+    if request.method == "POST":
+        query = request.form.to_dict()
+        print("The fields are:", query)
 
-@app.route("/generate_form", methods=["GET","POST"])
-def generate_form():
-    fields=request.form.to_dict()
-    print('The fields are:', fields)
-    print('The method is:', request.method)
-    if request.method =='POST':
-        raw_code = generate_code(fields)
-        fixed_code = extract_form(raw_code)
-        save_code(fixed_code)
-        # return render_template("index.html")
-        return render_template_string(
-        '{% extends "index.html" %}{% block form_block %}' + fixed_code + '{% endblock %}'
-    )
-    else:
-        return render_template("index.html")
+        result = creator_graph.invoke(
+            {"messages": query["fields"]},
+            config=config
+        )
+        generated_code = result["whole_code"]
+        form_code = result['form_code']
+        print('Form code is:',form_code)
+
+    return render_template("layout.html", generated_code=generated_code)
+
+
+# @app.route("/generate_form", methods=["GET","POST"])
+# def generate_form():
+#     query=request.form.to_dict()
+#     print('The fields are:', query)
+#     print('The method is:', request.method)
+#     if request.method =='POST':
+#         result=creator_graph.invoke({
+#             'messages':query['fields']
+#         },config=config)
+        
+#         return render_template_string(result['whole_code'])
+#     else:
+#         return render_template("index.html")
 
 
 @app.route("/submit", methods=["POST"])
@@ -49,3 +64,4 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))  # Render sets PORT env variable
     app.run(host="0.0.0.0", port=port)
 
+# app.run(debug=True) 

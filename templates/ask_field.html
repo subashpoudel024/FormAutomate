@@ -11,13 +11,23 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            margin: 0;
         }
         .chat-container {
             background-color: #fff;
-            padding: 20px 25px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            width: 400px;
+            width: 100%;
+            max-width: 500px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
         }
         .chat-bubble {
             background-color: #007bff;
@@ -26,31 +36,34 @@
             border-radius: 15px;
             margin-bottom: 15px;
             display: inline-block;
+            max-width: 80%;
+        }
+        .input-area {
+            display: flex;
+            border-top: 1px solid #ddd;
+            padding: 10px;
+            background: #fafafa;
         }
         .input-box {
-            width: calc(100% - 90px);
-            padding: 10px;
-            border-radius: 5px;
+            flex: 1;
+            padding: 12px;
+            border-radius: 20px;
             border: 1px solid #ccc;
             font-size: 16px;
+            margin-right: 10px;
+        }
+        .input-box:focus {
+            outline: none;
+            border-color: #007bff;
         }
         .submit-btn {
-            padding: 10px 15px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: 20px;
             background-color: #28a745;
             color: white;
             font-weight: bold;
             cursor: pointer;
-        }
-        .form-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .form-row input[type="text"]:focus {
-            outline: none;
-            border-color: #007bff;
         }
         .submit-btn:hover {
             background-color: #218838;
@@ -59,11 +72,17 @@
 </head>
 <body>
     <div class="chat-container">
-        <div class="chat-bubble">
-            Hi! Please enter the fields you want in the form :
+        <!-- Chat messages area -->
+        <div class="chat-messages">
+            <div class="chat-bubble">
+                Hi!  Enter the fields you want in the form : <br>
+                You can also specify your css.
+            </div>
         </div>
-        <form action="/generate_form" method="post" class="form-row">
-            <input type="text" name="fields" class="input-box">
+
+        <!-- Input area -->
+        <form action="/" method="post" class="input-area">
+            <input type="text" name="fields" class="input-box" placeholder="Type your message...">
             <input type="submit" value="Send" class="submit-btn">
         </form>
     </div>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Generator</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+        }
+        .left-panel {
+            width: 40%;   /* was 30% */
+            padding: 20px;
+            border-right: 1px solid #ddd;
+            background: #f9f9f9;
+            overflow-y: auto;
+        }
+        .right-panel {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="left-panel">
+        {% include "ask_field.html" %}
+    </div>
+
+    <div class="right-panel">
+        <h2>Generated Form</h2>
+        {% if generated_code %}
+            {{ generated_code | safe }}
+        {% else %}
+            <p>No form generated yet.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

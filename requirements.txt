@@ -4,3 +4,4 @@ langchain-groq
 pydantic 
 dotenv
 gunicorn
+langgraph
