@@ -24,23 +24,24 @@ def index():
         generated_code = result["whole_code"]
         form_code = result['form_code']
         print('Form code is:',form_code)
+        return render_template_string(generated_code)
 
-    return render_template("layout.html", generated_code=generated_code)
+    return render_template("ask_field.html")
 
 
-# @app.route("/generate_form", methods=["GET","POST"])
-# def generate_form():
-#     query=request.form.to_dict()
-#     print('The fields are:', query)
-#     print('The method is:', request.method)
-#     if request.method =='POST':
-#         result=creator_graph.invoke({
-#             'messages':query['fields']
-#         },config=config)
+@app.route("/generate_form", methods=["GET","POST"])
+def generate_form():
+    query=request.form.to_dict()
+    print('The fields are:', query)
+    print('The method is:', request.method)
+    if request.method =='POST':
+        result=creator_graph.invoke({
+            'messages':query['fields']
+        },config=config)
         
-#         return render_template_string(result['whole_code'])
-#     else:
-#         return render_template("index.html")
+        return render_template_string(result['whole_code'])
+    else:
+        return render_template("index.html")
 
 
 @app.route("/submit", methods=["POST"])
